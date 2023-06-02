@@ -12,16 +12,18 @@ import { TaskRecurrenceModule } from './task_recurrence/task_recurrence.module';
 import { GroupModule } from './group/group.module';
 import { TaskUserCommentModule } from './task_user_comment/task_user_comment.module';
 import { TaskUserModule } from './task_user/task_user.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'postgres',
+      host: process.env.POSTGRES_HOST,
+      port: parseInt(process.env.POSTGRES_PORT),
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DB,
       autoLoadEntities: true,
       synchronize: true,
     }),
