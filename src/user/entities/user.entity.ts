@@ -1,6 +1,6 @@
-import { GroupEntity } from 'src/group/entities/group.entity';
-import { TaskEntity } from 'src/task/entities/task.entity';
-import { TagEntity } from 'src/tag/entities/tag.entity';
+import { GroupEntity } from '../../group/entities/group.entity';
+import { TaskEntity } from '../../task/entities/task.entity';
+import { TagEntity } from '../../tag/entities/tag.entity';
 
 import {
   Column,
@@ -9,7 +9,7 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Role } from 'src/config/enum/roles.enum';
+import { Role } from '../../config/enum/roles.enum';
 
 @Entity('user')
 export class UserEntity {

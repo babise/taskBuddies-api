@@ -9,7 +9,7 @@
 //     recurrence_interval integer // L'intervalle de récurrence (par exemple, "2" pour une récurrence tous les 2 jours)
 //   }
 
-import { TaskEntity } from 'src/task/entities/task.entity';
+import { TaskEntity } from '../../task/entities/task.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('task_recurrence')

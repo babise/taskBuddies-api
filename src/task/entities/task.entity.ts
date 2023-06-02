@@ -1,6 +1,6 @@
-import { UserEntity } from 'src/user/entities/user.entity';
-import { TagEntity } from 'src/tag/entities/tag.entity';
-import { GroupEntity } from 'src/group/entities/group.entity';
+import { UserEntity } from '../../user/entities/user.entity';
+import { TagEntity } from '../../tag/entities/tag.entity';
+import { GroupEntity } from '../../group/entities/group.entity';
 
 import {
   PrimaryGeneratedColumn,
@@ -11,8 +11,8 @@ import {
   ManyToOne,
   JoinTable,
 } from 'typeorm';
-import { TaskRecurrenceEntity } from 'src/task_recurrence/entities/task_recurrence.entity';
-import { Timestamp } from 'src/Generic/timestamp.entity';
+import { TaskRecurrenceEntity } from '../../task_recurrence/entities/task_recurrence.entity';
+import { Timestamp } from '../../Generic/timestamp.entity';
 
 @Entity('task')
 export class TaskEntity extends Timestamp {

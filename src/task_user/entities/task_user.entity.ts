@@ -5,9 +5,9 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { TaskEntity } from 'src/task/entities/task.entity';
-import { TaskUserCommentEntity } from 'src/task_user_comment/entities/task_user_comment.entity';
+import { UserEntity } from '../../user/entities/user.entity';
+import { TaskEntity } from '../../task/entities/task.entity';
+import { TaskUserCommentEntity } from '../../task_user_comment/entities/task_user_comment.entity';
 
 @Entity('task_user')
 export class TaskUserEntity {

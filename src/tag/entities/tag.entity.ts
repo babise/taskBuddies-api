@@ -6,9 +6,9 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { GroupEntity } from 'src/group/entities/group.entity';
-import { TaskEntity } from 'src/task/entities/task.entity';
+import { UserEntity } from '../../user/entities/user.entity';
+import { GroupEntity } from '../../group/entities/group.entity';
+import { TaskEntity } from '../../task/entities/task.entity';
 
 @Entity('tag')
 export class TagEntity {

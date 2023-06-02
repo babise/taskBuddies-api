@@ -1,6 +1,6 @@
-import { TagEntity } from 'src/tag/entities/tag.entity';
-import { TaskEntity } from 'src/task/entities/task.entity';
-import { UserEntity } from 'src/user/entities/user.entity';
+import { TagEntity } from '../../tag/entities/tag.entity';
+import { TaskEntity } from '../../task/entities/task.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
