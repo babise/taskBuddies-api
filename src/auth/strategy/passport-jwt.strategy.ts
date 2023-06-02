@@ -7,8 +7,8 @@ import { UserService } from 'src/user/user.service';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private configService: ConfigService,
-    private userService: UserService,
+    private readonly configService: ConfigService,
+    private readonly userService: UserService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -17,20 +17,22 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload) {
+  async validate(payload: any) {
     const { email } = payload;
 
-    if(!email){
-        throw new UnauthorizedException();
+    if (!email) {
+      throw new UnauthorizedException();
     }
 
-    const user = await this.userService.findOneByEmail(email); 
+    const user = await this.userService.findByEmail(email);
 
     if (!user) {
-        throw new UnauthorizedException();
+      throw new UnauthorizedException();
     }
 
-    delete user.password
-    return user 
+    // Supprimez le mot de passe de l'objet utilisateur
+    delete user.password;
+
+    return user;
   }
 }

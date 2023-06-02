@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { SignupAuthDto } from './dto/signup-auth.dto';
 import { SigninAuthDto } from './dto/signin-auth.dto';
 import { UserService } from 'src/user/user.service';
@@ -12,36 +12,60 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  signup(signupAuthDto: SignupAuthDto) {
-      return this.userService.create(signupAuthDto);
-  }
+  async signup(signupAuthDto: SignupAuthDto) {
+    try {
+      const userInDB = await this.userService.findByEmail(signupAuthDto.email);
 
-  async signin(signinAuthDto: SigninAuthDto) {
-    const user = await this.validateUser(signinAuthDto);
+      if (userInDB) {
+        throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      }
 
-    const payload = {
-      email: user.email,
-      id: user.id,
-    };
+      const newUser = await this.userService.create(signupAuthDto);
 
-    return {
-      access_token: this.generateJwtToken(payload),
+      return newUser;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  async validateUser(signinAuthDto : SigninAuthDto) {
-    const user = await this.userService.findOneByEmail(signinAuthDto.email);
+  async signin(signinAuthDto: SigninAuthDto) {
+    try {
+      const user = await this.validateUser(signinAuthDto);
 
-    if (!user) throw new Error('User not found')
+      const payload = {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      };
 
-    const validPassword = await bcrypt.compare(signinAuthDto.password, user.password);
+      const jwtToken = this.generateJwtToken(payload);
 
-    if (!validPassword) throw new Error('Invalid password')
-    
+      return { jwtToken };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async validateUser(signinAuthDto: SigninAuthDto) {
+    const user = await this.userService.findByEmail(signinAuthDto.email);
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const validPassword = await bcrypt.compare(
+      signinAuthDto.password,
+      user.password,
+    );
+
+    if (!validPassword) {
+      throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
+    }
+
     return user;
   }
 
-  generateJwtToken(payload) {
+  generateJwtToken(payload: any) {
     return this.jwtService.sign(payload);
   }
 }

@@ -1,19 +1,29 @@
-import { GoalValidationEntity } from 'src/goal-validation/entities/goal-validation.entity';
-import { GoalEntity } from 'src/goal/entities/goal.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { GroupEntity } from 'src/group/entities/group.entity';
+import { TaskEntity } from 'src/task/entities/task.entity';
+import { TagEntity } from 'src/tag/entities/tag.entity';
+
+import {
+  Column,
+  Entity,
+  OneToMany,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Role } from 'src/config/enum/roles.enum';
 
 @Entity('user')
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({
-    // select: false,
-  })
-  password: string;
+
   @Column({
     unique: true,
   })
   email: string;
+
+  @Column()
+  password: string;
+
   @Column({
     unique: true,
   })
@@ -22,14 +32,22 @@ export class UserEntity {
   @Column({
     nullable: true,
   })
-  avatar: string;
+  profile_picture: string;
 
-  @OneToMany(() => GoalEntity, (goal) => goal.author)
-  goals: GoalEntity[];
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.User,
+    nullable: false,
+  })
+  roles: Role;
 
-  @OneToMany(
-    () => GoalValidationEntity,
-    (goal_validation) => goal_validation.user,
-  )
-  validations: GoalValidationEntity[];
+  @OneToMany(() => TaskEntity, (task) => task.author)
+  tasks: TaskEntity[];
+
+  @OneToMany(() => TagEntity, (tag) => tag.createdBy)
+  createdTags: TagEntity[];
+
+  @ManyToMany(() => GroupEntity, (group) => group.users, { cascade: true })
+  groups: GroupEntity[];
 }

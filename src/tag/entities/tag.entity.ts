@@ -1,21 +1,33 @@
-import { Timestamp } from 'src/Generic/timestamp.entity';
-import { GoalEntity } from 'src/goal/entities/goal.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { GroupEntity } from 'src/group/entities/group.entity';
+import { TaskEntity } from 'src/task/entities/task.entity';
 
 @Entity('tag')
-export class TagEntity extends Timestamp {
+export class TagEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true, nullable: false })
-  name: string;
+  @Column()
+  title: string;
 
-  @Column({ nullable: true })
-  color: string;
-
-  @Column({ nullable: true })
+  @Column()
   icon: string;
 
-  @ManyToMany(() => GoalEntity, (goal) => goal.tags)
-  goals: GoalEntity[];
+  @ManyToOne(() => UserEntity, (user) => user.createdTags)
+  createdBy: UserEntity;
+
+  @ManyToOne(() => GroupEntity, (group) => group.tags)
+  group: GroupEntity;
+
+  @ManyToMany(() => TaskEntity, (task) => task.tags)
+  @JoinTable()
+  tasks: TaskEntity[];
 }
