@@ -15,11 +15,16 @@ export class TaskService {
   }
 
   async findAll() {
-    return this.taskRepository.find({ where: { deletedAt: IsNull() } });
+    return this.taskRepository.find({
+      relations: ['recurrences'],
+    });
   }
 
   async findOne(id: number) {
-    return this.taskRepository.findBy({ id });
+    return this.taskRepository.find({
+      where: { id },
+      relations: ['recurrences'],
+    });
   }
 
   async update(id: number, updateTaskDto) {
@@ -39,24 +44,36 @@ export class TaskService {
     const tasksOnDate = tasks.filter((task) => {
       return task.recurrences.some((recurrence) => {
         const taskStartDate = recurrence.start_date || task.createdAt;
-        const taskEndDate = recurrence.end_date || new Date();
+        const taskEndDate = recurrence.end_date || null;
+        const interval = recurrence.recurrence_interval || null;
+        const dayOfWeek = recurrence.day_of_week || null;
+        const dayOfMonth = recurrence.day_of_month || null;
 
-        if (recurrence.date) {
-          return recurrence.date.toDateString() === date.toDateString();
+        // Check for single occurrence task
+        if (!taskEndDate && !interval && !dayOfWeek && !dayOfMonth) {
+          return taskStartDate.toDateString() === date.toDateString();
         }
 
-        if (recurrence.day_of_week) {
-          return date.getDay() === recurrence.day_of_week;
+        // Check for weekly recurrence
+        if (dayOfWeek) {
+          return date.getDay() === dayOfWeek;
         }
 
-        if (recurrence.recurrence_interval) {
+        // Check for monthly recurrence
+        if (dayOfMonth) {
+          return date.getDate() === dayOfMonth;
+        }
+
+        // Check for recurrence with interval
+        if (interval) {
           const daysDifference = Math.floor(
             (date.getTime() - taskStartDate.getTime()) / (1000 * 60 * 60 * 24),
           );
-          return daysDifference % recurrence.recurrence_interval === 0;
+          return daysDifference % interval === 0;
         }
 
-        if (taskStartDate <= date && taskEndDate >= date) {
+        // Check for recurrence within start and end date
+        if (taskStartDate <= date && (!taskEndDate || taskEndDate >= date)) {
           return true;
         }
 

@@ -21,20 +21,17 @@ export class TaskRecurrenceEntity {
   task: TaskEntity;
 
   @Column()
-  date: Date;
-
-  @Column()
   start_date: Date;
 
-  @Column()
+  @Column({ nullable: true })
   end_date: Date;
 
-  @Column()
+  @Column({ nullable: true })
   day_of_week: number; // 0 for Sunday, 6 for Saturday
 
-  @Column()
+  @Column({ nullable: true })
   day_of_month: number; // 1-31
 
-  @Column()
+  @Column({ nullable: true })
   recurrence_interval: number; // 1-365
 }
