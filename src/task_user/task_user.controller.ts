@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { TaskUserService } from './task_user.service';
 import { TaskUserEntity } from './entities/task_user.entity';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-passport.guard';
-import { User } from 'src/config/decorators/user.decorator';
+import { JwtAuthGuard } from '../auth/guard/jwt-passport.guard';
+import { User } from '../config/decorators/user.decorator';
 
 @Controller('task-user')
 @UseGuards(JwtAuthGuard)

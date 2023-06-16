@@ -12,8 +12,8 @@ import {
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-passport.guard';
-import { User } from 'src/config/decorators/user.decorator';
+import { JwtAuthGuard } from '../auth/guard/jwt-passport.guard';
+import { User } from '../config/decorators/user.decorator';
 
 @Controller('task')
 @UseGuards(JwtAuthGuard)

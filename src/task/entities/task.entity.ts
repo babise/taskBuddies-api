@@ -13,7 +13,7 @@ import {
 } from 'typeorm';
 import { TaskRecurrenceEntity } from '../../task_recurrence/entities/task_recurrence.entity';
 import { Timestamp } from '../../Generic/timestamp.entity';
-import { TaskUserEntity } from 'src/task_user/entities/task_user.entity';
+import { TaskUserEntity } from '../../task_user/entities/task_user.entity';
 
 @Entity('task')
 export class TaskEntity extends Timestamp {

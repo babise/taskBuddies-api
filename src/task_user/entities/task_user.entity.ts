@@ -8,7 +8,7 @@ import {
 import { UserEntity } from '../../user/entities/user.entity';
 import { TaskEntity } from '../../task/entities/task.entity';
 import { TaskUserCommentEntity } from '../../task_user_comment/entities/task_user_comment.entity';
-import { Timestamp } from 'src/Generic/timestamp.entity';
+import { Timestamp } from '../../Generic/timestamp.entity';
 
 @Entity('task_user')
 export class TaskUserEntity extends Timestamp {
