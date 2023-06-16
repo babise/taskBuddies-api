@@ -1,15 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { TaskUserService } from './task_user.service';
-import { CreateTaskUserDto } from './dto/create-task_user.dto';
-import { UpdateTaskUserDto } from './dto/update-task_user.dto';
+import { TaskUserEntity } from './entities/task_user.entity';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-passport.guard';
+import { User } from 'src/config/decorators/user.decorator';
 
 @Controller('task-user')
+@UseGuards(JwtAuthGuard)
 export class TaskUserController {
   constructor(private readonly taskUserService: TaskUserService) {}
 
   @Post()
-  create(@Body() createTaskUserDto: CreateTaskUserDto) {
-    return this.taskUserService.create(createTaskUserDto);
+  create(@Body() taskUser: Partial<TaskUserEntity>, @User() user: any) {
+    return this.taskUserService.create(taskUser, user);
   }
 
   @Get()
@@ -18,17 +30,17 @@ export class TaskUserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.taskUserService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.taskUserService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskUserDto: UpdateTaskUserDto) {
-    return this.taskUserService.update(+id, updateTaskUserDto);
+  update(@Param('id') id: number, @Body() taskUser: Partial<TaskUserEntity>) {
+    return this.taskUserService.update(id, taskUser);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.taskUserService.remove(+id);
+  softDelete(@Param('id') id: number) {
+    return this.taskUserService.softDelete(id);
   }
 }

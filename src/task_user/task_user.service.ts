@@ -1,26 +1,38 @@
+// task-user.service.ts
 import { Injectable } from '@nestjs/common';
-import { CreateTaskUserDto } from './dto/create-task_user.dto';
-import { UpdateTaskUserDto } from './dto/update-task_user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { TaskUserEntity } from './entities/task_user.entity';
 
 @Injectable()
 export class TaskUserService {
-  create(createTaskUserDto: CreateTaskUserDto) {
-    return 'This action adds a new taskUser';
+  constructor(
+    @InjectRepository(TaskUserEntity)
+    private taskUserRepository: Repository<TaskUserEntity>,
+  ) {}
+
+  async create(taskUser: Partial<TaskUserEntity>, user: any) {
+    taskUser.doneAt = new Date();
+    taskUser.user = user; // Associez l'utilisateur à taskUser ici si c'est ce que vous voulez faire
+
+    const newTaskUser = this.taskUserRepository.create(taskUser);
+    return this.taskUserRepository.save(newTaskUser);
   }
 
-  findAll() {
-    return `This action returns all taskUser`;
+  async findAll() {
+    return this.taskUserRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} taskUser`;
+  async findOne(id: number) {
+    return this.taskUserRepository.findBy({ id });
   }
 
-  update(id: number, updateTaskUserDto: UpdateTaskUserDto) {
-    return `This action updates a #${id} taskUser`;
+  async update(id: number, taskUser: Partial<TaskUserEntity>) {
+    await this.taskUserRepository.update(id, taskUser);
+    return this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} taskUser`;
+  async softDelete(id: number) {
+    return this.taskUserRepository.softDelete(id);
   }
 }

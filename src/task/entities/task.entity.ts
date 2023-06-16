@@ -13,6 +13,7 @@ import {
 } from 'typeorm';
 import { TaskRecurrenceEntity } from '../../task_recurrence/entities/task_recurrence.entity';
 import { Timestamp } from '../../Generic/timestamp.entity';
+import { TaskUserEntity } from 'src/task_user/entities/task_user.entity';
 
 @Entity('task')
 export class TaskEntity extends Timestamp {
@@ -38,4 +39,9 @@ export class TaskEntity extends Timestamp {
   @ManyToMany(() => TagEntity, (tag) => tag.tasks, { cascade: true })
   @JoinTable()
   tags: TagEntity[];
+
+  @OneToMany(() => TaskUserEntity, (taskUser) => taskUser.task, {
+    cascade: true,
+  })
+  taskUsers: TaskUserEntity[];
 }

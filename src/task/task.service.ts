@@ -10,20 +10,26 @@ export class TaskService {
     private taskRepository: Repository<TaskEntity>,
   ) {}
 
-  async create(createTaskDto) {
-    return this.taskRepository.save(createTaskDto);
+  async create(createTaskDto, user: any) {
+    // Créer un nouvel objet avec l'attribut author associé à l'utilisateur
+    const task = new TaskEntity();
+    Object.assign(task, createTaskDto); // Copier toutes les propriétés de createTaskDto à task
+    task.author = user; // Associer l'utilisateur à l'attribut author
+
+    return this.taskRepository.save(task);
   }
 
   async findAll() {
     return this.taskRepository.find({
-      relations: ['recurrences'],
+      //rel reccurrences et taskUsers
+      relations: ['recurrences', 'author', 'taskUsers'],
     });
   }
 
   async findOne(id: number) {
     return this.taskRepository.find({
       where: { id },
-      relations: ['recurrences'],
+      relations: ['recurrences', 'author', 'taskUsers'],
     });
   }
 
@@ -38,7 +44,7 @@ export class TaskService {
   async getTaskOnDate(date: Date = new Date()) {
     const tasks = await this.taskRepository.find({
       where: { deletedAt: IsNull() },
-      relations: ['recurrences'],
+      relations: ['recurrences', 'author', 'taskUsers'],
     });
 
     const tasksOnDate = tasks.filter((task) => {

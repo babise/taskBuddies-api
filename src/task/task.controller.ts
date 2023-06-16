@@ -3,22 +3,26 @@ import {
   Get,
   Post,
   Body,
-  Put,
   Param,
   Delete,
   Query,
+  Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-passport.guard';
+import { User } from 'src/config/decorators/user.decorator';
 
 @Controller('task')
+@UseGuards(JwtAuthGuard)
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.taskService.create(createTaskDto);
+  create(@User() user: any, @Body() createTaskDto: CreateTaskDto) {
+    return this.taskService.create(createTaskDto, user);
   }
 
   @Get()
@@ -37,7 +41,7 @@ export class TaskController {
     return this.taskService.findOne(+id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
     return this.taskService.update(+id, updateTaskDto);
   }

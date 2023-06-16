@@ -15,7 +15,9 @@ export class TaskRecurrenceService {
   }
 
   async findAll() {
-    return this.taskRecurrenceRepository.find();
+    return this.taskRecurrenceRepository.find({
+      relations: ['task'],
+    });
   }
 
   async findOne(id: number) {
