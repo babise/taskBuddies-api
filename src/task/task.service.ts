@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { TaskEntity } from './entities/task.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class TaskService {
@@ -11,18 +12,25 @@ export class TaskService {
   ) {}
 
   async create(createTaskDto, user: any) {
-    // Créer un nouvel objet avec l'attribut author associé à l'utilisateur
     const task = new TaskEntity();
-    Object.assign(task, createTaskDto); // Copier toutes les propriétés de createTaskDto à task
-    task.author = user; // Associer l'utilisateur à l'attribut author
+    Object.assign(task, createTaskDto);
+    task.author = user;
 
-    return this.taskRepository.save(task);
+    try {
+      const savedTask = await this.taskRepository.save(task);
+      console.log('Task saved successfully:', savedTask);
+      return savedTask;
+    } catch (error) {
+      console.error('Error saving task:', error);
+      throw error;
+    }
   }
 
-  async findAll() {
+  async findAll(user: UserEntity) {
     return this.taskRepository.find({
       //rel reccurrences et taskUsers
       relations: ['recurrences', 'author', 'taskUsers'],
+      where: { author: { id: user.id } },
     });
   }
 
@@ -41,9 +49,9 @@ export class TaskService {
     await this.taskRepository.softDelete(id);
   }
 
-  async getTaskOnDate(date: Date = new Date()) {
+  async getTaskOnDate(date: Date = new Date(), user: UserEntity) {
     const tasks = await this.taskRepository.find({
-      where: { deletedAt: IsNull() },
+      where: { deletedAt: IsNull(), author: { id: user.id } },
       relations: ['recurrences', 'author', 'taskUsers'],
     });
 

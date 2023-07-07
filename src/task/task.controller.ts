@@ -14,6 +14,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-passport.guard';
 import { User } from '../config/decorators/user.decorator';
+import { UserEntity } from 'src/user/entities/user.entity';
 
 @Controller('task')
 @UseGuards(JwtAuthGuard)
@@ -26,14 +27,14 @@ export class TaskController {
   }
 
   @Get()
-  findAll() {
-    return this.taskService.findAll();
+  findAll(@User() user: UserEntity) {
+    return this.taskService.findAll(user);
   }
 
   @Get('date')
-  findOnDate(@Query('date') date: string) {
+  findOnDate(@Query('date') date: string, @User() user: UserEntity) {
     const taskDate = date ? new Date(date) : new Date();
-    return this.taskService.getTaskOnDate(taskDate);
+    return this.taskService.getTaskOnDate(taskDate, user);
   }
 
   @Get(':id')
