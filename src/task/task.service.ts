@@ -29,7 +29,7 @@ export class TaskService {
   async findAll(user: UserEntity) {
     return this.taskRepository.find({
       //rel reccurrences et taskUsers
-      relations: ['recurrences', 'author', 'taskUsers'],
+      relations: ['recurrences', 'author', 'taskUsers', 'tags'],
       where: { author: { id: user.id } },
     });
   }

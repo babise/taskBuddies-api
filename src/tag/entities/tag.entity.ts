@@ -9,16 +9,17 @@ import {
 import { UserEntity } from '../../user/entities/user.entity';
 import { GroupEntity } from '../../group/entities/group.entity';
 import { TaskEntity } from '../../task/entities/task.entity';
+import { Timestamp } from 'src/Generic/timestamp.entity';
 
 @Entity('tag')
-export class TagEntity {
+export class TagEntity extends Timestamp {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   icon: string;
 
   @ManyToOne(() => UserEntity, (user) => user.createdTags)

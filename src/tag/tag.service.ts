@@ -17,6 +17,7 @@ export class TagService {
       const tag = await this.tagRepository.save(createTagDto);
       return tag;
     } catch (error) {
+      console.error('Error detail:', error); // Log the error to console for more details
       throw new Error('Error creating tag');
     }
   }

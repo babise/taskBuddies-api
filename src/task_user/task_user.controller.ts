@@ -20,7 +20,7 @@ export class TaskUserController {
   constructor(private readonly taskUserService: TaskUserService) {}
 
   @Post()
-  create(@Body() taskUser: Partial<TaskUserEntity>, @User() user: any) {
+  create(@Body() taskUser: TaskUserEntity, @User() user: any) {
     return this.taskUserService.create(taskUser, user);
   }
 
