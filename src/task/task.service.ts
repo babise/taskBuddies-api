@@ -11,7 +11,7 @@ export class TaskService {
     private taskRepository: Repository<TaskEntity>,
   ) {}
 
-  async create(createTaskDto, user: any) {
+  async create(createTaskDto, user: UserEntity) {
     const task = new TaskEntity();
     Object.assign(task, createTaskDto);
     task.author = user;

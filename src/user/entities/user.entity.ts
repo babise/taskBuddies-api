@@ -8,8 +8,10 @@ import {
   OneToMany,
   ManyToMany,
   PrimaryGeneratedColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Role } from '../../config/enum/roles.enum';
+import { TaskUserEntity } from 'src/task_user/entities/task_user.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -41,6 +43,9 @@ export class UserEntity {
     nullable: false,
   })
   roles: Role;
+
+  @OneToMany(() => TaskUserEntity, (taskUser) => taskUser.user)
+  taskUsers: TaskUserEntity[];
 
   @OneToMany(() => TaskEntity, (task) => task.author)
   tasks: TaskEntity[];
