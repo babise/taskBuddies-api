@@ -3,12 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { TaskEntity } from './entities/task.entity';
 import { UserEntity } from 'src/user/entities/user.entity';
+import { TagEntity } from 'src/tag/entities/tag.entity';
 
 @Injectable()
 export class TaskService {
   constructor(
     @InjectRepository(TaskEntity)
     private taskRepository: Repository<TaskEntity>,
+    @InjectRepository(TagEntity)
+    private tagRepository: Repository<TagEntity>,
   ) {}
 
   async create(createTaskDto, user: UserEntity) {
